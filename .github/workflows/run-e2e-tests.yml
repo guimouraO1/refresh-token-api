@@ -1,0 +1,36 @@
+name: Run E2E Tests
+
+on: [pull_request]
+
+jobs:
+  run-e2e-tests:
+    name: Run E2E Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: bitnami/postgresql
+        ports:
+          - 5432:5432
+        env:
+          POSTGRESQL_USERNAME: postgres
+          POSTGRESQL_PASSWORD: docker
+          POSTGRESQL_DATABASE: solid
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "npm"
+      
+      - run: npm ci
+
+      - run: npm run test:e2e
+        env:
+          JWT_PRIVATE_KEY: "-----BEGIN RSA PRIVATE KEY-----\nMIIJKAIBAAKCAgEAsgSH6GWyiVIW5vo4gyZQN8SxAITvOSM1yFQJO2lZbuifW4UN\nEUnVN6zHjuDHVogEKbkI4h0KKtDITJkprm9I36fzJbB4AbDNILHjnG2nJ96iSjUI\nr7dV0c2qYsEZQvy93u+gFp0k9xbq5t5wmX89UYg+5o5S9dS2joL6f6n4X6mhES+S\njTmrGOa97y8Toa4wMuAT+O5on6U7d251iRMd4VkcST1zgDk84vdDWFSpOxUKQBls\nhxXl67aWFYR3ev58h9wolbKDNKN6FdCxezE+qQqMI643KDvgfmtOZnm31Hfk2LDZ\nBOXvm1pwNE3K13/IRRMYsWCJU0zjsZr9nx+V4r4Q/p+Bi8aznoCVvGzrR9RrugB7\nduV35etkQQBrsJHBGRt/u44uTMawvB758KDdCYSHzw8wMkMPzPiEnCR4oF8Ffn7v\nYO9fH87CCuSs3UgvRp7N2JaKzzoUUksl7daPY6eUaECwyZZ9vOJ8LW/4pbDlsn5P\nizjwurx7aO1KDYxC0GVLWzmjofg4iJSoTGU5lZvkE6uU1pgJdPlIY5Lm+bxMB1rN\nj4pCM+yLua6BpOx2mS3oFmBcc1+TGUpbFCBRK94py7upZah/HTARUKEi+RwJGhsU\nsCIfkiLhsXsG3/O/kqW3Bdhdu/SB2SNe1+LoQylMYKqq1wtBIsefqyaTe48CAwEA\nAQKCAgB94vhdHrWvqC5r7pzSGeD2XxCwhlFJfZ3F6a+RpQFKjhRLOv6vsB+ovHVu\nk4RDq/INsz0V8WVEO9q5WEKCiU3mY7VtfKqQv39/1GxaLazcY/MuOOzIngSBVkhc\nh6MenO6EXb4+36fJWBqLYtgLpFAvfQLGNfVyxJbIltUgPIlY1PMC3TpsxlA5TssX\n/pmKZ0zMXWuiSK4R3137KlDRu4QQ3NxE6sDn9xIYirTEHTKDhnB2PcRijtjF5Juj\n4cZAYwCbbtQAcHmaWtS14pvvuzZNghjyDnwQ5q7tl2Kc0wxtos9hcUY20Yesu7rH\nMg/0bven6UY4AUV7c888xJb/1O0/eTklpKpqaeOSzcSSMZhC71ucQ0HqXc9W524e\n+1/Q6fc6pHz4r0kQ+I92NebKbL/5cWmtrgJO2I7ER1nwgme1xJnZ3IpELrb4Roxi\nAA8yXKD2j1rl4EjvkFudH0inaqhkSMvQCoZzgklutbpu+W/FOxjiUAaXeMLRxRzd\nQKm8E7APyLlK39FJUL3L4p+YFGaWHOT8k8xImpu1WHH3MS5bRaKB+bA+LzK+i4cv\nKHt4KC3xSV2PLAWLgQBEOwt2o3T0taRMPRzgnhyTigYwFt4lNVmMIZL1zR4vz049\nPtELR0O+koO+7IRWGvbTvGwannSRLn8YFQTul8GBvD0cG83+6QKCAQEA5yN3gFVt\nQdw81LlslKs0V46me6a5yF2wFEJ57ILyXY6ztph5JLgcN4j74sYvEzgsixZUP+7N\n2PwACA9H6uDb/7M5UJKx27zcPgbY5db63jUXjDvZSxbhdMy/hmzYO6hqEfdfDxMx\nLSMG4mjk+z5f856IXVg/5t23fzoeUZWrXX/o21hfDbe3up7FXYOIwg+pc7wOKJ/c\nE0NwgNVa9Djx+tX8T8cOcz7Fe0nnfsQeAziLKOKqMCUC2QYcfA+Co7LsFkiF+Yax\nS71MotJZ4Pq9ILahenQAMQGBKHn/D+HZD+zutjOq+ohQ2XIlEBeFSDQplbFzmZj2\nt3Hi+uYPdUv/dQKCAQEAxSpZ2vhEWBlFXv64Q/kD4pkDo4JXqlBsH7hMcmlHq4xv\nnV6iEOUF6X6Uo7C64KioLnAWU/yT4vThGE5D+kRUTGj3BdmRNxcXlQOZHHEg0TLS\n4l9qJVnNVr33sbSwab9CW/uyrxMf9Koknmn4MMUVlW3By8MXd4NNhghxsQ9F/KYV\nkHNCvMP0hpjNsRQfZ3Kq/t746yLphcWGrpNC7wUxdHBIstIBwjOYQYh3bUysJh6Z\niEGXHEnNoa3odFj1sFK0c3F7kwiYVxgZIYoCaqL2IApFypX8UaEQOWR+4Zsw9+x7\nR3HNrryE7BfKuhvk+HgDnoHzJdKXpaet+oYMFeOScwKCAQEA1YzZLgK/bSgUM94V\nSc5cD8FGY9wIreyRcEZy62eYkYP02nFJC/nmaBDx1/WPLMyrqt24fVEfcqhxRwEH\nSyTxXe+ytpSyKvj064HcB452PbMDzJbHDi9XolhBY+tQZN4XEf5hH0Z2GuPPyoNr\nfA2HDUidaNDOSXjzvmJt/KaxqzMwaufc+omRAKUMaHfMdK+PudQ3qKT56fpXCVEW\nNaofN8dY1ERvP17xihUgAukjaYpmWCIDZ3Pqi6Sv0Jdr9d6rbXMYBRDC4d1F3vFG\nBSzkbEMQMljWjHB9am48j+n0aFhZvJFEGTC0shJZ1+JDTBCVky5eRb0jxR09vt2r\nzo2muQKCAQAsEihdmqrkKlnoPvV/NBUbPGqkzMi9qBZTDMYBuOitPsngGjwNnLOy\nmnmtER7kgq59Gs7S3R1NWMFLxorJUSaqobe9lgEwmDfMNi6uPddBC6Q5t2wphyYv\n4myQSzw3lunFV8B8A8Fb1gAzbKpudE87xHnSCvye2Tml4RNQqYJSU+l0DV94hDCP\nOW6Yy0+ttuLj74EiRf5+yUUulnoapUWFqmeFmQ2NlCzPUSqowr+kEajt3QNi7lhJ\ncG8KOqxISmRNfatKlVw/84ICji+2GFD9nm41N0tcD61ptr3pvd+3OyPfN1/rU/Y+\nM5879Go8486jSpbH+IevHojz+6yN4/1jAoIBACkwGzVBGzIf5CmGkC46yCeAeMWW\n1gSAKC18LSC9ikdjSa797bw6KV5ML6YbWgLHc9UvZTdN/PX7V+TsMmqil46TvUQW\nzBLAloezki+hqVH4l4sukp7wJCilPwrojhdV2sS4HsrSbw7oayD6BP/eaZjw6E2b\nIDJY+Oz0wdTEaweaUz8xuihp9RhRMZPUsULI89AmUIfqEPNTCocrb/LGStdGUOzv\n1bS9q9d8KwXH+qWnzkNChTR7IFh6YBBiPIb4ALa3AaUZhxGHQmkwxwkFs7Byk0c5\n4M1zRYuRHwoIwUeUgQOmmO4mMOwY938A+dW+nWNIeYePmbchxI0HoopM4GE=\n-----END RSA PRIVATE KEY-----\n"
+          JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAsgSH6GWyiVIW5vo4gyZQ\nN8SxAITvOSM1yFQJO2lZbuifW4UNEUnVN6zHjuDHVogEKbkI4h0KKtDITJkprm9I\n36fzJbB4AbDNILHjnG2nJ96iSjUIr7dV0c2qYsEZQvy93u+gFp0k9xbq5t5wmX89\nUYg+5o5S9dS2joL6f6n4X6mhES+SjTmrGOa97y8Toa4wMuAT+O5on6U7d251iRMd\n4VkcST1zgDk84vdDWFSpOxUKQBlshxXl67aWFYR3ev58h9wolbKDNKN6FdCxezE+\nqQqMI643KDvgfmtOZnm31Hfk2LDZBOXvm1pwNE3K13/IRRMYsWCJU0zjsZr9nx+V\n4r4Q/p+Bi8aznoCVvGzrR9RrugB7duV35etkQQBrsJHBGRt/u44uTMawvB758KDd\nCYSHzw8wMkMPzPiEnCR4oF8Ffn7vYO9fH87CCuSs3UgvRp7N2JaKzzoUUksl7daP\nY6eUaECwyZZ9vOJ8LW/4pbDlsn5Pizjwurx7aO1KDYxC0GVLWzmjofg4iJSoTGU5\nlZvkE6uU1pgJdPlIY5Lm+bxMB1rNj4pCM+yLua6BpOx2mS3oFmBcc1+TGUpbFCBR\nK94py7upZah/HTARUKEi+RwJGhsUsCIfkiLhsXsG3/O/kqW3Bdhdu/SB2SNe1+Lo\nQylMYKqq1wtBIsefqyaTe48CAwEAAQ==\n-----END PUBLIC KEY-----\n"
+          DATABASE_URL: "postgresql://postgres:docker@localhost:5432/solid?schema=public"
+          NODE_ENV: dev
+          PORT: 3333
