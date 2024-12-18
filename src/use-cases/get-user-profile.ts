@@ -13,9 +13,7 @@ interface GetProfileUseCaseResponse {
 export class GetUserProfileUseCase {
     constructor(private usersRepository: UsersRepository) {}
 
-    async execute({
-        userId
-    }: GetProfileUseCaseRequest): Promise<GetProfileUseCaseResponse> {
+    async execute({ userId }: GetProfileUseCaseRequest): Promise<GetProfileUseCaseResponse> {
         const user = await this.usersRepository.findById(userId);
 
         if (!user) {

@@ -32,7 +32,7 @@ export class App {
         this.app.register(fastifyCookie);
         this.app.register(cors, {
             origin: true,
-            credentials: true,
+            credentials: true
         });
     }
 

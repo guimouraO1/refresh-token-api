@@ -12,13 +12,13 @@ describe("Refresh token controller", () => {
     });
 
     it("shoud be able to refresh a token", async () => {
-        await request(app.server).post("/users").send({
+        await request(app.server).post("/user").send({
             name: "Jhon Dow",
             email: "jhondoe@example.com",
             password: "123456"
         });
 
-        const authResponse = await request(app.server).post("/sessions").send({
+        const authResponse = await request(app.server).post("/auth/session").send({
             email: "jhondoe@example.com",
             password: "123456"
         });

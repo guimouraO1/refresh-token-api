@@ -12,13 +12,13 @@ describe("Authenticate controller", () => {
     });
 
     it("shoud be able to authenticate", async () => {
-        await request(app.server).post("/users").send({
+        await request(app.server).post("/user").send({
             name: "Jhon Dow",
             email: "jhondoe@example.com",
             password: "123456"
         });
 
-        const response = await request(app.server).post("/sessions").send({
+        const response = await request(app.server).post("/auth/session").send({
             email: "jhondoe@example.com",
             password: "123456"
         });
