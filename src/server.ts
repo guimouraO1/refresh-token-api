@@ -1,13 +1,13 @@
-import cluster from 'cluster';
-import os from 'os';
-import { app } from './app';  // O app Fastify que você criou
-import { env } from './env';
+import cluster from "cluster";
+import os from "os";
+import { app } from "./app";
+import { env } from "./env";
 
 const workersMap: { [key: string]: number } = {};
 
 function createWorker(workerId: number) {
     const worker = cluster.fork({
-        workerId: workerId.toString(),
+        workerId: workerId.toString()
     });
     workersMap[worker.id] = workerId;
 }
@@ -18,7 +18,7 @@ function generateWorkers() {
         createWorker(i + 1);
     }
 
-    cluster.on('exit', (worker) => {
+    cluster.on("exit", (worker) => {
         const workerId = workersMap[worker.id];
         console.log(`Worker ${workerId} died. Creating a new one.`);
         delete workersMap[worker.id];
@@ -29,12 +29,12 @@ function generateWorkers() {
 async function startHttpServer() {
     try {
         await app.listen({
-            host: '0.0.0.0',
-            port: Number(env.PORT) || 3000,
+            host: "0.0.0.0",
+            port: Number(env.PORT) || 3000
         });
         console.log(`🚀 HTTP Server is running on port: ${env.PORT ?? 3000}`);
     } catch (error) {
-        console.error('Error starting server:', error);
+        console.error("Error starting server:", error);
     }
 }
 
@@ -47,5 +47,5 @@ async function startServers() {
 }
 
 startServers().catch((err) => {
-    console.error('Error starting servers:', err);
+    console.error("Error starting servers:", err);
 });

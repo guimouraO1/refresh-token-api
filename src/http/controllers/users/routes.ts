@@ -9,5 +9,8 @@ export async function usersRoutes(app: FastifyInstance) {
     app.get("/user", { onRequest: [verifyJwt] }, profile);
     app.post("/user", register);
     app.post("/auth/session", authenticate);
+    app.post("/auth/end-session", (req, res) => {
+        res.clearCookie("refreshToken").status(200).send({});
+    });
     app.patch("/token/refresh", refresh);
 }

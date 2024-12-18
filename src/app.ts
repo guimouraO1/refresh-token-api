@@ -20,13 +20,13 @@ export class App {
         this.app.register(fastifyJwt, {
             secret: {
                 public: env.JWT_PUBLIC_KEY,
-                private: env.JWT_PRIVATE_KEY,
+                private: env.JWT_PRIVATE_KEY
             },
             cookie: {
                 cookieName: "refreshToken",
-                signed: false,
+                signed: false
             },
-            sign: { algorithm: "RS256", expiresIn: "10m" },
+            sign: { algorithm: "RS256", expiresIn: "10m" }
         });
 
         this.app.register(fastifyCookie);
@@ -45,7 +45,7 @@ export class App {
             if (error instanceof ZodError) {
                 return reply.status(400).send({
                     message: "Validation Error.",
-                    issues: error.format(),
+                    issues: error.format()
                 });
             }
 
