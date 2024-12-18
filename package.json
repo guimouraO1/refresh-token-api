@@ -1,7 +1,7 @@
 {
   "name": "03-solid",
   "version": "1.0.0",
-  "description": "GymPass style app.",
+  "description": "App",
   "main": "index.js",
   "scripts": {
     "start": "tsx watch src/server.ts",
@@ -10,8 +10,6 @@
     "test:install-prisma-environment": "npm link vitest-environment-prisma",
     "build": "tsup src --out-dir build",
     "test": "vitest run --dir src/use-cases",
-    "test:watch": "vitest --dir src/use-cases",
-    "test:coverage": "vitest run --coverage",
     "pretest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
     "test:e2e": "vitest run --dir src/http"
   },
@@ -22,6 +20,7 @@
     "@rocketseat/eslint-config": "2.2.2",
     "@types/node": "22.8.7",
     "@types/supertest": "6.0.2",
+    "@vitest/coverage-v8": "2.1.4",
     "eslint": "8.57.1",
     "npm-run-all": "2.1.0",
     "prisma": "5.21.1",

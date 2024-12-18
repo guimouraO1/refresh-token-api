@@ -1,50 +1,65 @@
-import fastify from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 import { ZodError } from "zod";
 import { env } from "./env";
 import fastifyJwt from "@fastify/jwt";
 import { usersRoutes } from "./http/controllers/users/routes";
-import { gymsRoutes } from "./http/controllers/gyms/routes";
-import { checkInRoutes } from "./http/controllers/checkIns/routes";
 import fastifyCookie from "@fastify/cookie";
-import cors from '@fastify/cors'
+import cors from "@fastify/cors";
 
-export const app = fastify();
+export class App {
+    private app: FastifyInstance;
 
-app.register(fastifyJwt, {
-    secret: {
-        public: env.JWT_PUBLIC_KEY,
-        private: env.JWT_PRIVATE_KEY
-    },
-    cookie: {
-        cookieName: "refreshToken",
-        signed: false
-    },
-    sign: { algorithm: "RS256" , expiresIn: "10s"}
-});
-
-app.register(fastifyCookie);
-
-app.register(cors, {
-    origin: true,
-    credentials: true
+    constructor() {
+        this.app = fastify();
+        this.registerPlugins();
+        this.setRoutes();
+        this.setErrorHandler();
     }
-);
 
-app.register(usersRoutes);
-// app.register(gymsRoutes);
-// app.register(checkInRoutes);
+    private registerPlugins(): void {
+        this.app.register(fastifyJwt, {
+            secret: {
+                public: env.JWT_PUBLIC_KEY,
+                private: env.JWT_PRIVATE_KEY,
+            },
+            cookie: {
+                cookieName: "refreshToken",
+                signed: false,
+            },
+            sign: { algorithm: "RS256", expiresIn: "10m" },
+        });
 
-app.setErrorHandler((error, _request, reply) => {
-    if (error instanceof ZodError) {
-        return reply.status(400).send({
-            message: "Validation Error.",
-            issues: error.format()
+        this.app.register(fastifyCookie);
+        this.app.register(cors, {
+            origin: true,
+            credentials: true,
         });
     }
 
-    if (env.NODE_ENV !== "production") {
-        console.error(error);
+    private setRoutes(): void {
+        this.app.register(usersRoutes);
     }
 
-    return reply.status(500).send({ message: "Internal Server Error" });
-});
+    private setErrorHandler(): void {
+        this.app.setErrorHandler((error, _request, reply) => {
+            if (error instanceof ZodError) {
+                return reply.status(400).send({
+                    message: "Validation Error.",
+                    issues: error.format(),
+                });
+            }
+
+            if (env.NODE_ENV !== "production") {
+                console.error(error);
+            }
+
+            return reply.status(500).send({ message: "Internal Server Error" });
+        });
+    }
+
+    public getServer(): FastifyInstance {
+        return this.app;
+    }
+}
+
+export const app = new App().getServer();
