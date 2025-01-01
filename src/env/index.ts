@@ -5,7 +5,8 @@ const envShema = z.object({
     NODE_ENV: z.enum(["dev", "production", "test"]).default("dev"),
     PORT: z.coerce.number().default(3000),
     JWT_PUBLIC_KEY: z.string(),
-    JWT_PRIVATE_KEY: z.string()
+    JWT_PRIVATE_KEY: z.string(),
+    DATABASE_URL: z.string()
 });
 
 const _env = envShema.safeParse(process.env);
